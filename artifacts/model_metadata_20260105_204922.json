@@ -1,0 +1,7 @@
+{
+  "best_model": "rf",
+  "best_score": 197.31797995850857,
+  "metric": "mae",
+  "timestamp": "20260105_204922",
+  "model_path": "artifacts\\best_model.pkl"
+}
