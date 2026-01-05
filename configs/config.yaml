@@ -1,0 +1,101 @@
+# MLOps Pipeline Configuration
+# NYC Taxi Trip Duration Dataset
+
+# Paths
+paths:
+  artifacts_dir: "artifacts/"
+  outputs_dir: "outputs/"
+  raw_dir: "outputs/raw/"
+  preprocessed_dir: "outputs/preprocessed/"
+  engineered_dir: "outputs/engineered/"
+  predictions_dir: "outputs/predictions/"
+
+# Preprocessing Configuration
+preprocessing:
+  # Data validation
+  required_columns:
+    train:
+      - pickup_latitude
+      - pickup_longitude
+      - dropoff_latitude
+      - dropoff_longitude
+      - pickup_datetime
+      - trip_duration
+    inference:
+      - pickup_latitude
+      - pickup_longitude
+      - dropoff_latitude
+      - dropoff_longitude
+      - pickup_datetime
+  
+  # Missing values handling
+  fill_passenger_count_default: 1
+  
+  # Coordinate validation (WGS-84)
+  longitude_range: [-180, 180]
+  latitude_range: [-90, 90]
+  
+  # Trip duration outlier removal (quantiles for training data)
+  duration_lower_quantile: 0.01
+  duration_upper_quantile: 0.99
+  min_duration_seconds: 0
+
+# Feature Engineering Configuration
+feature_engineering:
+  distance_calculation_chunk_size: 100000
+  earth_radius_km: 6371.0088
+  
+  categorical_columns:
+    - vendor_id
+    - store_and_fwd_flag
+  
+  numeric_columns:
+    - distance_km
+    - pickup_hour
+    - pickup_day
+    - pickup_weekday
+    - pickup_month
+    - passenger_count
+  
+  datetime_columns:
+    - pickup_hour
+    - pickup_day
+    - pickup_weekday
+    - pickup_month
+  
+  # Encoder/Scaler artifact names
+  encoder_artifact: "onehot_encoder.pkl"
+  scaler_artifact: "standard_scaler.pkl"
+
+# Training Configuration
+training:
+  metric: "mae"  # Options: mae, rmse, r2
+  test_size: 0.2
+  seed: 42
+  
+  model_configs:
+    linear: {}
+    ridge:
+      alpha: 1.0
+    lasso:
+      alpha: 0.1
+    rf:
+      n_estimators: 10
+      max_depth: 12
+      n_jobs: -1
+    gb:
+      n_estimators: 10
+      max_depth: 3
+      learning_rate: 0.1
+
+# MLflow Configuration (Optional)
+mlflow:
+  enabled: false
+  experiment_name: "NYC-Taxi-Trip-ML"
+  tracking_uri: "http://localhost:5000"
+
+# Logging Configuration
+logging:
+  level: "INFO"  # Options: DEBUG, INFO, WARNING, ERROR
+  format: "[%(asctime)s] %(levelname)s - %(name)s - %(message)s"
+  file: "logs/pipeline.log"
