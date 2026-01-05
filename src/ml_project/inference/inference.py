@@ -6,7 +6,7 @@ from pathlib import Path
 from datetime import datetime
 from typing import Dict, Any
 
-from src.ml_project.preprocess.Preprocessor import Preprocessor
+from src.ml_project.preprocess.preprocessor import Preprocessor
 from src.ml_project.features.FeatureEngineer import FeatureEngineer
 
 
