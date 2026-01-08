@@ -1,25 +1,31 @@
-version: '3.11'
-
 services:
   app:
     build: .
     image: ml-project:latest
     working_dir: /app
     volumes:
-      - ./:/app
+      - ./src:/app/src
+      - ./configs:/app/configs
+      - ./scripts:/app/scripts
+      - ./artifacts:/app/artifacts
+      - ./outputs:/app/outputs
     environment:
       - PYTHONUNBUFFERED=1
     entrypoint: ["/app/entrypoint.sh"]
-    # Use this to run interactive commands e.g.: `docker-compose run app train`
+    # Usage: docker-compose run app train
+    #        docker-compose run app inference
 
   mlflow:
     image: ghcr.io/mlflow/mlflow:latest
-    container_name: mlflow
     ports:
       - "5000:5000"
     volumes:
       - ./artifacts:/mlflow/artifacts
     environment:
       - MLFLOW_TRACKING_URI=http://0.0.0.0:5000
-    command: mlflow server --backend-store-uri sqlite:///mlflow.db --default-artifact-root /mlflow/artifacts --host 0.0.0.0
-    # Set `mlflow.enabled: true` in configs/config.yaml and point tracking_uri at this service if you want to use mlflow
+    command: >
+      mlflow server
+      --backend-store-uri sqlite:////mlflow/mlflow.db
+      --default-artifact-root /mlflow/artifacts
+      --host 0.0.0.0
+    # Optional: set mlflow.enabled: true in configs/config.yaml if using

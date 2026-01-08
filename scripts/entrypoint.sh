@@ -7,14 +7,14 @@ set -e
 if [ "$1" = "train" ]; then
   shift
   echo "Starting training pipeline..."
-  uv run train "$@"
+  python -m scripts.train_cli "$@"
   exit $?
 fi
 
 if [ "$1" = "inference" ]; then
   shift
   echo "Starting inference pipeline..."
-  uv run inference "$@"
+  python -m scripts.inference_cli "$@"
   exit $?
 fi
 
