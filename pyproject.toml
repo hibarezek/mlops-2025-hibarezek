@@ -13,13 +13,19 @@ dependencies = [
     "scikit-learn>=1.8.0",
     "joblib>=1.4.2",
     "pyyaml>=6.0.2",
+    "sagemaker>=2.180.0,<2.200",
+    "boto3>=1.42.22",
+    "botocore[crt]>=1.42.22",
+    "setuptools",
 ]
 
 [project.optional-dependencies]
 # For AWS SageMaker deployment (only needed when deploying to cloud)
 aws = [
-    "sagemaker>=3.3.0",
+    "sagemaker>=2.180.0,<2.200",
     "boto3>=1.35.0",
+    "botocore[crt]",
+    "setuptools",
 ]
 # For experiment tracking
 mlflow = [
